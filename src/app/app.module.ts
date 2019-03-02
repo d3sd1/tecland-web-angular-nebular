@@ -14,6 +14,10 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ThemeModule } from './@theme/theme.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {Feathers} from './services/feathers.service';
+import {DataService} from './services/data.service';
+import {AuthService} from './services/auth.service';
+import {AuthGuard} from './guards/auth.guard';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,6 +33,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   bootstrap: [AppComponent],
   providers: [
+    Feathers,
+    DataService,
+    AuthService,
+    AuthGuard,
     { provide: APP_BASE_HREF, useValue: '/' },
   ],
 })
