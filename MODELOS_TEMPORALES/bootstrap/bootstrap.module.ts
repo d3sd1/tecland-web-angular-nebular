@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { ThemeModule } from '../../@theme/theme.module';
+import { ThemeModule } from '../../src/app/@theme/theme.module';
 
 import { BootstrapRoutingModule } from './bootstrap-routing.module';
 import { ModalsComponent } from './modals/modals.component';

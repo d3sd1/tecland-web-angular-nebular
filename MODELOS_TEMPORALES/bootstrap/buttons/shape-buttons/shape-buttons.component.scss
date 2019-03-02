@@ -1,5 +1,5 @@
-@import '../../../../@theme/styles/themes';
-@import '~@nebular/bootstrap/styles/buttons';
+@import '../../../../src/app/@theme/styles/themes';
+@import '../../../../node_modules/@nebular/bootstrap/styles/buttons';
 
 @include nb-install-component() {
 
