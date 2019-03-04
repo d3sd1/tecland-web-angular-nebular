@@ -1,7 +1,9 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
-import { Router } from '@angular/router';
-import { Feathers } from '../../services/feathers.service';
-import {NbAuthService, NbLoginComponent} from '@nebular/auth';
+import {Router} from '@angular/router';
+import {Feathers} from '../../services/feathers.service';
+import {NbAuthService, NbAuthSocialLink, NbLoginComponent} from '@nebular/auth';
+import {Paginated} from '@feathersjs/feathers';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-login',
@@ -9,6 +11,17 @@ import {NbAuthService, NbLoginComponent} from '@nebular/auth';
 })
 export class NgxLoginComponent extends NbLoginComponent {
   messages: string[] = [];
+  protected service: NbAuthService;
+  protected options: {};
+  protected cd: ChangeDetectorRef;
+  protected router: Router;
+  showMessages: any = {
+    'error': false,
+    'success': false
+  };
+  errors: string[] = [];
+  user: any;
+  submitted: boolean = false;
 
   constructor(
     private feathers: Feathers,
@@ -17,11 +30,29 @@ export class NgxLoginComponent extends NbLoginComponent {
     cd: ChangeDetectorRef,
   ) {
     super(service, {}, cd, router);
+    this.test();
   }
 
-  doLogin(email: string, password: string): void {
+  test() {
+    (this.feathers.service('tests'))
+      .watch()
+      .find().subscribe(
+      x => console.log('Observer got a next value: ', x),
+      err => console.error('Observer got an error: ' + err),
+      () => console.log('Observer got a complete notification')
+    )
+  }
+
+  login(): void {
+    this.submitted = true;
+    this.showMessages.success = false;
+    this.showMessages.error = false;
+    const email = this.user.email;
+    const password = this.user.password;
     if (!email || !password) {
-      this.messages.push('Incomplete credentials!');
+      this.showMessages.error = true;
+      this.messages = ['Debes rellenar el formulario de conexión.'];
+      this.submitted = false;
       return;
     }
 
@@ -31,22 +62,24 @@ export class NgxLoginComponent extends NbLoginComponent {
       email,
       password,
     })
-      // navigate to base URL on success
+    // navigate to base URL on success
       .then(() => {
-        this.messages.push('login ok');
+        this.submitted = false;
+        this.showMessages.success = true;
+        this.messages = ['¡Conexión satisfactoria!'];
 
-        this.router.navigate(['/']);
+        //this.router.navigate(['/']);
       })
       .catch(err => {
-        this.messages.unshift('Wrong credentials!');
+        this.submitted = false;
+        this.showMessages.error = true;
+        console.log(err.message);
+        if (err.message === 'Socket connection timed out') {
+          this.messages = ['Servidor desconectado'];
+        } else {
+          this.messages = ['Credenciales incorrectas'];
+        }
       });
   }
 
-  signup(email: string, password: string) {
-    this.feathers.service('users')
-      .create({email, password})
-      .then(() => this.messages.push('User created.'))
-      .catch(err => this.messages.push('Could not create user!'))
-    ;
-  }
 }
