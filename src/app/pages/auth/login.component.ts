@@ -1,15 +1,17 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 import {Router} from '@angular/router';
-import {Feathers} from '../../services/feathers.service';
-import {NbAuthService, NbAuthSocialLink, NbLoginComponent} from '@nebular/auth';
-import {Paginated} from '@feathersjs/feathers';
-import {map} from 'rxjs/operators';
+import {WebsocketClient} from '../../websockets/websocket-client.service';
+import {NbAuthService, NbLoginComponent} from '@nebular/auth';
+import {Channel} from '../../websockets/Channel';
+import {Message} from '@stomp/stompjs';
+
 
 @Component({
   selector: 'ngx-login',
   templateUrl: './login.component.html',
 })
 export class NgxLoginComponent extends NbLoginComponent {
+  loginChannel: Channel;
   messages: string[] = [];
   protected service: NbAuthService;
   protected options: {};
@@ -24,26 +26,34 @@ export class NgxLoginComponent extends NbLoginComponent {
   submitted: boolean = false;
 
   constructor(
-    private feathers: Feathers,
+    private ws: WebsocketClient,
     router: Router,
     service: NbAuthService,
     cd: ChangeDetectorRef,
   ) {
     super(service, {}, cd, router);
-    this.test();
-  }
 
-  test() {
-    (this.feathers.service('tests'))
-      .watch()
-      .find().subscribe(
-      x => console.log('Observer got a next value: ', x),
-      err => console.error('Observer got an error: ' + err),
-      () => console.log('Observer got a complete notification')
-    )
+    this.loginChannel = this.ws.subscribe('/login', true);
+    this.loginChannel.stream().subscribe((message: Message) => {
+      let resp = JSON.parse(message.body);
+      console.log();
+      if (resp.statusCode === 200) {
+        this.showMessages.success = true;
+        this.messages = ['¡Conexión satisfactoria!'];
+        //TODO: guardar en storage el token
+
+        //this.router.navigate(['/']);
+      } else {
+        this.submitted = false;
+        this.showMessages.error = true;
+        this.messages = ['Credenciales incorrectas'];
+
+      }
+    });
   }
 
   login(): void {
+
     this.submitted = true;
     this.showMessages.success = false;
     this.showMessages.error = false;
@@ -56,30 +66,10 @@ export class NgxLoginComponent extends NbLoginComponent {
       return;
     }
 
-    // try to authenticate with feathers
-    this.feathers.authenticate({
-      strategy: 'local',
-      email,
-      password,
-    })
-    // navigate to base URL on success
-      .then(() => {
-        this.submitted = false;
-        this.showMessages.success = true;
-        this.messages = ['¡Conexión satisfactoria!'];
+    this.loginChannel.send(this.user);
 
-        //this.router.navigate(['/']);
-      })
-      .catch(err => {
-        this.submitted = false;
-        this.showMessages.error = true;
-        console.log(err.message);
-        if (err.message === 'Socket connection timed out') {
-          this.messages = ['Servidor desconectado'];
-        } else {
-          this.messages = ['Credenciales incorrectas'];
-        }
-      });
+    // push aqui
+
   }
 
 }

@@ -1,4 +1,4 @@
-import { Feathers } from './feathers.service';
+import { WebsocketClient } from '../websockets/websocket-client.service';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -8,14 +8,13 @@ import { Router } from '@angular/router';
 @Injectable()
 export class AuthService {
 
-  constructor(private feathers: Feathers, private router: Router) {}
+  constructor(private feathers: WebsocketClient, private router: Router) {}
 
-  public logIn(credentials?): Promise<any> {
-    return this.feathers.authenticate(credentials);
+  public logIn(credentials?) { // : Promise<any>
+    //TODO
   }
 
   public logOut() {
-    this.feathers.logout();
-    this.router.navigate(['/']);
+    //TODO
   }
 }
