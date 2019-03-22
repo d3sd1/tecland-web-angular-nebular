@@ -1,22 +1,22 @@
 import {Injectable, isDevMode} from '@angular/core';
 import {StompConfig, StompService, StompState} from '@stomp/ng2-stompjs';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Channel} from './Channel';
 import 'rxjs-compat/add/operator/map';
-import { Subject } from 'rxjs/Rx';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WebsocketClient {
   private connection: StompService = null;
-  private connected: Promise<boolean>;
+  private connected: boolean;
   constructor() {
     this.getConnection();
+    this.connected = false;
   }
 
-  public isConnected(): Promise<boolean> {
-    return this.connected;
+  public isConnected(): Observable<boolean> {
+    return new Observable(ob => {ob.next(this.connected); });
   }
 
   private getConnection() {
@@ -37,7 +37,18 @@ export class WebsocketClient {
       this.connection = new StompService(stompConfig);
 
     }
-
+    this.connection.connectionState$.map((state: number) => StompState[state]).subscribe((status: string) => {
+      console.log(status);
+      //TODO: aqui redirigir a pagina de reconexion cuando no este conectado y cuando este conectado a la ultima pagina visitada.
+      //TODO. que cuando el usuario entre a la pagina le cargue por defecto la ultima pagina visitada.
+      if (status !== 'OPEN' && status !== 'CONNECTING' && !this.connection.connected()) {
+        this.connected = false;
+      }
+      else {
+        this.connected = true;
+      }
+    });
+    console.log(this.connected);
     return this.connection;
 
   }
