@@ -2,6 +2,7 @@ import {ExtraOptions, RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import {AuthGuard} from './guards/auth.guard';
 import {SocketGuard} from './guards/socket.guard';
+import {OfflineComponent} from "./offline/offline.component";
 
 const routes: Routes = [
   {
@@ -15,6 +16,11 @@ const routes: Routes = [
     loadChildren: './pages/auth/auth.module#NgxAuthModule',
     canActivate: [SocketGuard],
   },
+  /*{
+    path: 'socket_server_down',
+    component: OfflineComponent,
+    canActivate: [!SocketGuard],
+  },*/
   {path: '**', redirectTo: 'auth/login'},
 ];
 
@@ -25,6 +31,9 @@ const config: ExtraOptions = {
 @NgModule({
   imports: [RouterModule.forRoot(routes, config)],
   exports: [RouterModule],
+  declarations: [
+    OfflineComponent
+  ]
 })
 export class AppRoutingModule {
 }

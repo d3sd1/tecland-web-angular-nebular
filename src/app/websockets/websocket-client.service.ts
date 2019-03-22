@@ -10,13 +10,24 @@ import 'rxjs-compat/add/operator/map';
 export class WebsocketClient {
   private connection: StompService = null;
   private connected: boolean;
+  private prevConnected: boolean;
+
   constructor() {
     this.getConnection();
     this.connected = false;
+    this.prevConnected = false;
   }
 
-  public isConnected(): Observable<boolean> {
-    return new Observable(ob => {ob.next(this.connected); });
+  public isConnected() {
+    return this.connected;
+  }
+
+  public wasConnected() {
+    return this.prevConnected;
+  }
+
+  public setPrevConnected(connected: boolean) {
+    this.prevConnected = connected;
   }
 
   private getConnection() {
@@ -38,17 +49,12 @@ export class WebsocketClient {
 
     }
     this.connection.connectionState$.map((state: number) => StompState[state]).subscribe((status: string) => {
-      console.log(status);
-      //TODO: aqui redirigir a pagina de reconexion cuando no este conectado y cuando este conectado a la ultima pagina visitada.
-      //TODO. que cuando el usuario entre a la pagina le cargue por defecto la ultima pagina visitada.
       if (status !== 'OPEN' && status !== 'CONNECTING' && !this.connection.connected()) {
         this.connected = false;
-      }
-      else {
+      } else {
         this.connected = true;
       }
     });
-    console.log(this.connected);
     return this.connection;
 
   }
