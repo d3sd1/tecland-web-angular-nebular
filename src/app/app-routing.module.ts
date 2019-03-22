@@ -2,7 +2,6 @@ import {ExtraOptions, RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import {AuthGuard} from './guards/auth.guard';
 import {SocketGuard} from './guards/socket.guard';
-import {OfflineComponent} from "./offline/offline.component";
 
 const routes: Routes = [
   {
