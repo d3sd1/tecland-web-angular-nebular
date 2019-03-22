@@ -1,17 +1,19 @@
 import {ExtraOptions, RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import {AuthGuard} from './guards/auth.guard';
+import {SocketGuard} from './guards/socket.guard';
 
 const routes: Routes = [
   {
     path: 'pages', loadChildren: 'app/pages/pages.module#PagesModule',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, SocketGuard],
   },
   {path: '', redirectTo: 'auth/login', pathMatch: 'full'},
 
   {
     path: 'auth',
     loadChildren: './pages/auth/auth.module#NgxAuthModule',
+    canActivate: [SocketGuard],
   },
   {path: '**', redirectTo: 'auth/login'},
 ];
