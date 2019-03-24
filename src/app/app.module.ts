@@ -18,6 +18,7 @@ import {WebsocketClient} from './websockets/websocket-client.service';
 import {AuthService} from './services/auth.service';
 import {AuthGuard} from './guards/auth.guard';
 import {SocketGuard} from './guards/socket.guard';
+import {LocationService} from './services/location.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,6 +36,7 @@ import {SocketGuard} from './guards/socket.guard';
   providers: [
     WebsocketClient,
     AuthService,
+    LocationService,
     AuthGuard,
     SocketGuard,
     { provide: APP_BASE_HREF, useValue: '/' },

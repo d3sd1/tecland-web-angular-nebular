@@ -4,6 +4,7 @@ import {WebsocketClient} from '../../websockets/websocket-client.service';
 import {NbAuthService, NbLoginComponent} from '@nebular/auth';
 import {Channel} from '../../websockets/Channel';
 import {Message} from '@stomp/stompjs';
+import {LocationService} from '../../services/location.service';
 
 
 @Component({
@@ -17,6 +18,8 @@ export class NgxLoginComponent extends NbLoginComponent {
   protected options: {};
   protected cd: ChangeDetectorRef;
   protected router: Router;
+  private lat:number = -1;
+  private lng:number = -1;
   showMessages: any = {
     'error': false,
     'success': false
@@ -30,13 +33,13 @@ export class NgxLoginComponent extends NbLoginComponent {
     router: Router,
     service: NbAuthService,
     cd: ChangeDetectorRef,
+    private location: LocationService
   ) {
     super(service, {}, cd, router);
 
-    this.loginChannel = this.ws.subscribe('/login', true);
+    this.loginChannel = this.ws.subscribe('/dash/login', true);
     this.loginChannel.stream().subscribe((message: Message) => {
-      let resp = JSON.parse(message.body);
-      console.log();
+      const resp = JSON.parse(message.body);
       if (resp.statusCode === 200) {
         this.showMessages.success = true;
         this.messages = ['¡Conexión satisfactoria!'];
@@ -49,6 +52,11 @@ export class NgxLoginComponent extends NbLoginComponent {
         this.messages = ['Credenciales incorrectas'];
 
       }
+    });
+
+    this.location.getPosition().then(pos => {
+      this.lat = pos.lat;
+      this.lng = pos.lng;
     });
   }
 
@@ -66,10 +74,11 @@ export class NgxLoginComponent extends NbLoginComponent {
       return;
     }
 
-    this.loginChannel.send(this.user);
-
-    // push aqui
-
+    this.loginChannel.send({
+      'user': this.user,
+      'coordsLat': this.lat,
+      'coordsLng': this.lng
+    });
   }
 
 }
