@@ -3,6 +3,7 @@ import {StompConfig, StompService, StompState} from '@stomp/ng2-stompjs';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Channel} from './Channel';
 import 'rxjs-compat/add/operator/map';
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +33,7 @@ export class WebsocketClient {
 
   private getConnection() {
     if (this.connection === null) {
-      const WEBSOCKET_URL = 'ws://localhost:8080/socket';
+      const WEBSOCKET_URL = 'ws://localhost:' + environment.socketPort + '/socket';
       const stompConfig: StompConfig = {
         url: WEBSOCKET_URL,
         headers: {
