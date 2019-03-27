@@ -31,6 +31,16 @@ export class WebsocketClient {
     this.prevConnected = connected;
   }
 
+  public isSocketOnline() {
+    const online = this.isConnected();
+    if (online && !this.wasConnected()) {
+      this.setPrevConnected(true);
+    } else if (!online) {
+      this.setPrevConnected(false);
+    }
+    return online;
+  }
+
   private getConnection() {
     if (this.connection === null) {
       const WEBSOCKET_URL = 'ws://localhost:' + environment.socketPort + '/socket';

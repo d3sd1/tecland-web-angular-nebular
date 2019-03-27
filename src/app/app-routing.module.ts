@@ -15,11 +15,10 @@ const routes: Routes = [
     loadChildren: './pages/auth/auth.module#NgxAuthModule',
     canActivate: [SocketGuard],
   },
-  /*{
-    path: 'socket_server_down',
-    component: OfflineComponent,
-    canActivate: [!SocketGuard],
-  },*/
+  {
+    path: 'outpanel',
+    loadChildren: './pages/logged_out_errors/error.module#NgxErrorModule',
+  },
   {path: '**', redirectTo: 'auth/login'},
 ];
 

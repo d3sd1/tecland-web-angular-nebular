@@ -228,8 +228,8 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'nb-shuffle',
     children: [
       {
-        title: '404',
-        link: '/pages/error/404',
+        title: 'E404',
+        link: '/pages/error/E404',
       },
     ],
   },

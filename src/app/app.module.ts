@@ -17,8 +17,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {WebsocketClient} from './websockets/websocket-client.service';
 import {AuthService} from './services/auth.service';
 import {AuthGuard} from './guards/auth.guard';
-import {SocketGuard} from './guards/socket.guard';
 import {LocationService} from './services/location.service';
+import {SocketGuard} from './guards/socket.guard';
 
 @NgModule({
   declarations: [AppComponent],
