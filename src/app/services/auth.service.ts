@@ -1,6 +1,8 @@
-import { WebsocketClient } from '../websockets/websocket-client.service';
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import {WebsocketClient} from '../websockets/websocket-client.service';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {Message} from '@stomp/stompjs';
 
 /**
  * Abstraction layer for auth. Nice to have when things get more complicated.
@@ -8,13 +10,30 @@ import { Router } from '@angular/router';
 @Injectable()
 export class AuthService {
 
-  constructor(private feathers: WebsocketClient, private router: Router) {}
+  private userSessionChannel;
+  private isUserAuth: boolean = false;
 
-  public logIn(credentials?) { // : Promise<any>
-    //TODO
+  constructor(private ws: WebsocketClient) {
+    this.userSessionChannel = this.ws.subscribe('/dash/jwt/session', true);
   }
 
-  public logOut() {
-    //TODO
+  public isLoggedIn(): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      if (localStorage.getItem('userSessionTL') === '') {
+        resolve(false);
+      }
+      console.log("SUBSCRIBE!!");
+      resolve(this.userSessionChannel.stream().subscribe((message: Message) => {
+        const resp = JSON.parse(message.body);
+        console.log("QUE PASA OSTIA " + resp.statusCode);
+        if (resp.statusCode === 200) {
+          console.log("OK RESP");
+          return true;
+        } else {
+          localStorage.setItem('userSessionTL', '');
+          return false;
+        }
+      }));
+    });
   }
 }

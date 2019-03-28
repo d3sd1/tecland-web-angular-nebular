@@ -18,8 +18,8 @@ export class NgxLoginComponent extends NbLoginComponent {
   protected options: {};
   protected cd: ChangeDetectorRef;
   protected router: Router;
-  private lat:number = -1;
-  private lng:number = -1;
+  private lat: number = -1;
+  private lng: number = -1;
   showMessages: any = {
     'error': false,
     'success': false
@@ -27,6 +27,7 @@ export class NgxLoginComponent extends NbLoginComponent {
   errors: string[] = [];
   user: any;
   submitted: boolean = false;
+  connected: boolean = false;
 
   constructor(
     private ws: WebsocketClient,
@@ -41,11 +42,15 @@ export class NgxLoginComponent extends NbLoginComponent {
     this.loginChannel.stream().subscribe((message: Message) => {
       const resp = JSON.parse(message.body);
       if (resp.statusCode === 200) {
+        this.submitted = false;
+        this.connected = true;
         this.showMessages.success = true;
         this.messages = ['¡Conexión satisfactoria!'];
-        //TODO: guardar en storage el token
 
-        //this.router.navigate(['/']);
+        localStorage.setItem('userSessionTL', resp.data);
+
+        //se supone que esto deberia redirigir TODO:
+        this.router.navigate(['/dash/dashboard']);
       } else {
         this.submitted = false;
         this.showMessages.error = true;
@@ -61,24 +66,25 @@ export class NgxLoginComponent extends NbLoginComponent {
   }
 
   login(): void {
+    if (!this.connected) {
+      this.submitted = true;
+      this.showMessages.success = false;
+      this.showMessages.error = false;
+      const email = this.user.email;
+      const password = this.user.password;
+      if (!email || !password) {
+        this.showMessages.error = true;
+        this.messages = ['Debes rellenar el formulario de conexión.'];
+        this.submitted = false;
+        return;
+      }
 
-    this.submitted = true;
-    this.showMessages.success = false;
-    this.showMessages.error = false;
-    const email = this.user.email;
-    const password = this.user.password;
-    if (!email || !password) {
-      this.showMessages.error = true;
-      this.messages = ['Debes rellenar el formulario de conexión.'];
-      this.submitted = false;
-      return;
+      this.loginChannel.send({
+        'dashUser': this.user,
+        'coordsLat': this.lat,
+        'coordsLng': this.lng
+      });
     }
-
-    this.loginChannel.send({
-      'user': this.user,
-      'coordsLat': this.lat,
-      'coordsLng': this.lng
-    });
   }
 
 }

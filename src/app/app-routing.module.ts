@@ -1,24 +1,25 @@
 import {ExtraOptions, RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
-import {AuthGuard} from './guards/auth.guard';
 import {SocketONGuard} from './guards/socketON.guard';
+import {LoggedInGuard} from './guards/loggedIn.guard';
+import {LoggedOutGuard} from './guards/loggedOut.guard';
 
 const routes: Routes = [
   {
-    path: 'pages', loadChildren: 'app/pages/pages.module#PagesModule',
-    canActivate: [AuthGuard, SocketONGuard],
+    path: 'dash', loadChildren: 'app/pages/pages.module#PagesModule',
+    canActivate: [ LoggedInGuard, SocketONGuard],
   },
-  {path: '', redirectTo: 'auth/login', pathMatch: 'full'},
 
   {
     path: 'auth',
     loadChildren: './pages/auth/auth.module#NgxAuthModule',
-    canActivate: [SocketONGuard],
+    canActivate: [SocketONGuard, LoggedOutGuard],
   },
   {
     path: 'outpanel',
     loadChildren: './pages/error_outpanel/error.module#NgxErrorModule',
   },
+  {path: '', redirectTo: 'auth/login', pathMatch: 'full'},
   {path: '**', redirectTo: 'auth/login'},
 ];
 

@@ -10,7 +10,6 @@ import {
   NbCheckboxModule,
   NbInputModule,
 } from '@nebular/theme';
-import {NgxLoginComponent} from './login.component';
 import {E404Component} from './E404/E404.component';
 import {ErrorComponent} from './error.component';
 import {ThemeModule} from '../../@theme/theme.module';

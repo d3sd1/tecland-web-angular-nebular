@@ -76,7 +76,7 @@
   <button nbButton
           fullWidth
           status="success"
-          [disabled]="submitted || !form.valid"
+          [disabled]="submitted || !form.valid || connected"
           [class.btn-pulse]="submitted">
     Conectar
   </button>
