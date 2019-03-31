@@ -1,7 +1,5 @@
 import {WebsocketClient} from '../websockets/websocket-client.service';
 import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs';
 import {Message} from '@stomp/stompjs';
 
 /**
@@ -21,19 +19,20 @@ export class AuthService {
     return new Promise<boolean>((resolve, reject) => {
       if (localStorage.getItem('userSessionTL') === '') {
         resolve(false);
+      } else {
+        this.userSessionChannel.stream().subscribe((message: Message) => {
+          const resp = JSON.parse(message.body);
+          if (resp.statusCode === 200) {
+            resolve(true);
+          } else {
+            localStorage.setItem('userSessionTL', '');
+            resolve(false);
+          }
+        });
+        this.userSessionChannel.send({
+          'jwt': localStorage.getItem('userSessionTL')
+        });
       }
-      console.log("SUBSCRIBE!!");
-      resolve(this.userSessionChannel.stream().subscribe((message: Message) => {
-        const resp = JSON.parse(message.body);
-        console.log("QUE PASA OSTIA " + resp.statusCode);
-        if (resp.statusCode === 200) {
-          console.log("OK RESP");
-          return true;
-        } else {
-          localStorage.setItem('userSessionTL', '');
-          return false;
-        }
-      }));
     });
   }
 }

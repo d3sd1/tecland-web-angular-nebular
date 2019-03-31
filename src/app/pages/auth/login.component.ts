@@ -48,9 +48,7 @@ export class NgxLoginComponent extends NbLoginComponent {
         this.messages = ['¡Conexión satisfactoria!'];
 
         localStorage.setItem('userSessionTL', resp.data);
-
-        //se supone que esto deberia redirigir TODO:
-        this.router.navigate(['/dash/dashboard']);
+        this.router.navigate(['/dash/start']);
       } else {
         this.submitted = false;
         this.showMessages.error = true;
