@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {Observable} from 'rxjs';
 import {AuthService} from '../services/auth.service';
 import {WebsocketClient} from '../websockets/websocket-client.service';
@@ -18,10 +18,11 @@ export class SocketOFFGuard implements CanActivate {
         const online = this.ws.isSocketOnline();
         if (online) {
           clearInterval(poolChecker);
-          if (localStorage.getItem('sockets_down_redir') === '') {
+          const redirUrl = localStorage.getItem('sockets_down_redir');
+          if (redirUrl === '' || redirUrl === null) {
             this.router.navigate(['/auth/login']);
           } else {
-            this.router.navigate([localStorage.getItem('sockets_down_redir')]);
+            this.router.navigate([redirUrl]);
           }
           localStorage.setItem('sockets_down_redir', '');
         }
