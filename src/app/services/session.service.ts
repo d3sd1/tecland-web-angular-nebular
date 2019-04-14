@@ -73,7 +73,7 @@ export class SessionService {
     return this.router.navigate([AppCommonRoutes.login]);
   }
 
-  public getUserData(): string {
+  public getUserData(): void {
     const logoutJwt = this.ws.subscribe(WebsocketRoute.SESSION_DATA, true);
     logoutJwt.send({
       'jwt': this.getSessionJwt(),
