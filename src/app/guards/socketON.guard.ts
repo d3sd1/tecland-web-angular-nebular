@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
-import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {Observable} from 'rxjs';
-import {AuthService} from '../services/auth.service';
+import {SessionService} from '../services/session.service';
 import {WebsocketClient} from '../websockets/websocket-client.service';
 
 
 @Injectable()
 export class SocketONGuard implements CanActivate {
-  constructor(private router: Router, private auth: AuthService, private ws: WebsocketClient) {
+  constructor(private router: Router, private auth: SessionService, private ws: WebsocketClient) {
   }
 
   canActivate(next: ActivatedRouteSnapshot,
@@ -24,6 +24,5 @@ export class SocketONGuard implements CanActivate {
         observer.next(online);
       }, 1000);
     });
-    ;
   }
 }

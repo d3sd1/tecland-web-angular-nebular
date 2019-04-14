@@ -4,10 +4,11 @@ import {SocketONGuard} from './guards/socketON.guard';
 import {LoggedInGuard} from './guards/loggedIn.guard';
 import {LoggedOutGuard} from './guards/loggedOut.guard';
 
+
 const routes: Routes = [
   {
     path: 'dash', loadChildren: 'app/pages/pages.module#PagesModule',
-    canActivate: [ LoggedInGuard, SocketONGuard],
+    canActivate: [LoggedInGuard, SocketONGuard],
   },
 
   {
@@ -29,7 +30,7 @@ const config: ExtraOptions = {
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, config)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {
 }

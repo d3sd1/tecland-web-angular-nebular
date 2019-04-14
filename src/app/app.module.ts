@@ -15,7 +15,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {ThemeModule} from './@theme/theme.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {WebsocketClient} from './websockets/websocket-client.service';
-import {AuthService} from './services/auth.service';
+import {SessionService} from './services/session.service';
 import {LocationService} from './services/location.service';
 import {SocketONGuard} from './guards/socketON.guard';
 import {SocketOFFGuard} from './guards/socketOFF.guard';
@@ -39,7 +39,7 @@ import {NbToastrModule} from '@nebular/theme';
   bootstrap: [AppComponent],
   providers: [
     WebsocketClient,
-    AuthService,
+    SessionService,
     LocationService,
     LoggedInGuard,
     LoggedOutGuard,

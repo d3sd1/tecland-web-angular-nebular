@@ -5,6 +5,8 @@ import {NbAuthService, NbLoginComponent} from '@nebular/auth';
 import {Channel} from '../../websockets/Channel';
 import {Message} from '@stomp/stompjs';
 import {LocationService} from '../../services/location.service';
+import {SessionService} from '../../services/session.service';
+import {WebsocketRoute} from '../../websockets/WebsocketRoute';
 
 
 @Component({
@@ -22,7 +24,7 @@ export class NgxLoginComponent extends NbLoginComponent {
   private lng: number = -1;
   showMessages: any = {
     'error': false,
-    'success': false
+    'success': false,
   };
   errors: string[] = [];
   user: any;
@@ -34,11 +36,13 @@ export class NgxLoginComponent extends NbLoginComponent {
     router: Router,
     service: NbAuthService,
     cd: ChangeDetectorRef,
-    private location: LocationService
+    private location: LocationService,
+    private auth: SessionService,
   ) {
     super(service, {}, cd, router);
 
-    this.loginChannel = this.ws.subscribe('/dash/login', true);
+    this.loginChannel = this.ws.subscribe(WebsocketRoute.LOGIN, true);
+
     this.loginChannel.stream().subscribe((message: Message) => {
       const resp = JSON.parse(message.body);
       if (resp.statusCode === 200) {
@@ -46,9 +50,7 @@ export class NgxLoginComponent extends NbLoginComponent {
         this.connected = true;
         this.showMessages.success = true;
         this.messages = ['¡Conexión satisfactoria!'];
-
-        localStorage.setItem('userSessionTL', resp.data);
-        this.router.navigate(['/dash/start']);
+        this.auth.login(resp.data.jwt);
       } else {
         this.submitted = false;
         this.showMessages.error = true;
@@ -80,7 +82,7 @@ export class NgxLoginComponent extends NbLoginComponent {
       this.loginChannel.send({
         'dashUser': this.user,
         'coordsLat': this.lat,
-        'coordsLng': this.lng
+        'coordsLng': this.lng,
       });
     }
   }

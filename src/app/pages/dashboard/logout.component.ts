@@ -1,13 +1,13 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
+import {SessionService} from '../../services/session.service';
 
 @Component({
   selector: 'ngx-login',
-  template: ''
+  template: '',
 })
 export class LogoutComponent {
-  constructor(private router: Router) {
-    localStorage.setItem('userSessionTL', '');
-    this.router.navigate(['/auth/login']);
+  constructor(private router: Router, private auth: SessionService) {
+    this.auth.logout();
   }
 }

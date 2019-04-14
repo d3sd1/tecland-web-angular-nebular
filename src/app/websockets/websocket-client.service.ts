@@ -1,9 +1,9 @@
 import {Injectable, isDevMode} from '@angular/core';
 import {StompConfig, StompService, StompState} from '@stomp/ng2-stompjs';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {Channel} from './Channel';
 import 'rxjs-compat/add/operator/map';
-import {environment} from "../../environments/environment";
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -43,17 +43,17 @@ export class WebsocketClient {
 
   private getConnection() {
     if (this.connection === null) {
-      const WEBSOCKET_URL = 'ws://localhost:' + environment.socketPort + '/socket';
+      const WEBSOCKET_URL = 'ws://localhost:' + environment.socketPort + '/opencon';
       const stompConfig: StompConfig = {
         url: WEBSOCKET_URL,
         headers: {
           login: '',
-          passcode: ''
+          passcode: '',
         },
         heartbeat_in: 0,
         heartbeat_out: 20000,
         reconnect_delay: 5000,
-        debug: isDevMode()
+        debug: isDevMode(),
       };
 
       this.connection = new StompService(stompConfig);

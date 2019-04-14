@@ -1,13 +1,14 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {Observable} from 'rxjs';
-import {AuthService} from '../services/auth.service';
+import {SessionService} from '../services/session.service';
 import {WebsocketClient} from '../websockets/websocket-client.service';
+import {AppCommonRoutes} from '../app-common-routes';
 
 
 @Injectable()
 export class SocketOFFGuard implements CanActivate {
-  constructor(private router: Router, private auth: AuthService, private ws: WebsocketClient) {
+  constructor(private router: Router, private auth: SessionService, private ws: WebsocketClient) {
   }
 
   canActivate(next: ActivatedRouteSnapshot,
@@ -20,7 +21,7 @@ export class SocketOFFGuard implements CanActivate {
           clearInterval(poolChecker);
           const redirUrl = localStorage.getItem('sockets_down_redir');
           if (redirUrl === '' || redirUrl === null) {
-            this.router.navigate(['/auth/login']);
+            this.router.navigate([AppCommonRoutes.login]);
           } else {
             this.router.navigate([redirUrl]);
           }

@@ -3,6 +3,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {NbMenuService, NbSidebarService} from '@nebular/theme';
 import {UserData} from '../../../@core/data/users';
 import {AnalyticsService, LayoutService} from '../../../@core/utils';
+import {AppCommonRoutes} from '../../../app-common-routes';
 
 @Component({
   selector: 'ngx-header',
@@ -15,7 +16,7 @@ export class HeaderComponent implements OnInit {
 
   user: any;
 
-  userMenu = [{title: 'Mi perfil'}, {title: 'Desconectar', link: '/dash/logout'}];
+  userMenu = [{title: 'Mi perfil'}, {title: 'Desconectar', link: AppCommonRoutes.logout}];
 
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
