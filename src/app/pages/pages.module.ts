@@ -6,7 +6,7 @@ import {ThemeModule} from '../@theme/theme.module';
 import {DashboardModule} from './dashboard/dashboard.module';
 import {MiscellaneousModule} from './miscellaneous/miscellaneous.module';
 import {ECommerceModule} from './e-commerce/e-commerce.module';
-import {LogoutComponent} from './dashboard/logout.component';
+import {LogoutComponent} from './dashboard/logout/logout.component';
 
 const PAGES_COMPONENTS = [
   PagesComponent,

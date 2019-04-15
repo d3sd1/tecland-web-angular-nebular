@@ -43,11 +43,11 @@ export class WebsocketClient {
 
   private getConnection() {
     if (this.connection === null) {
-      const WEBSOCKET_URL = 'ws://localhost:' + environment.socketPort + '/opencon';
+      const WEBSOCKET_URL = 'ws://localhost:' + environment.socketPort + '/opencon?token=probando';
       const stompConfig: StompConfig = {
         url: WEBSOCKET_URL,
         headers: {
-          login: '',
+          login: 'xddddd',
           passcode: '',
         },
         heartbeat_in: 0,

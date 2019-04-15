@@ -10,7 +10,6 @@ export class Channel {
     this.url = channel;
     this.messages = this.connection.subscribe(
       (isPrivateChannel ? '/user' : '') + this.url,
-      {jwt: localStorage.getItem('userSessionTL')}, // ITS A MUST LOCALSTORAGE HERE!
     );
   }
 

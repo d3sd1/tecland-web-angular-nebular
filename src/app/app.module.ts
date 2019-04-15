@@ -41,10 +41,10 @@ import {NbToastrModule} from '@nebular/theme';
     WebsocketClient,
     SessionService,
     LocationService,
-    LoggedInGuard,
-    LoggedOutGuard,
     SocketONGuard,
     SocketOFFGuard,
+    LoggedInGuard,
+    LoggedOutGuard,
     { provide: APP_BASE_HREF, useValue: '/' },
   ],
 })
