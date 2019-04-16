@@ -1,74 +1,66 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {ModuleWithProviders, NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import {
+  NbAccordionModule,
   NbActionsModule,
-  NbCardModule,
-  NbLayoutModule,
-  NbMenuModule,
-  NbRouteTabsetModule,
-  NbSearchModule,
-  NbSidebarModule,
-  NbTabsetModule,
-  NbThemeModule,
-  NbUserModule,
-  NbCheckboxModule,
-  NbPopoverModule,
-  NbContextMenuModule,
-  NbProgressBarModule,
+  NbAlertModule,
+  NbButtonModule,
+  NbCalendarKitModule,
   NbCalendarModule,
   NbCalendarRangeModule,
-  NbStepperModule,
-  NbButtonModule,
-  NbInputModule,
-  NbAccordionModule,
+  NbCardModule,
+  NbChatModule,
+  NbCheckboxModule,
+  NbContextMenuModule,
   NbDatepickerModule,
   NbDialogModule,
-  NbWindowModule,
+  NbInputModule,
+  NbLayoutModule,
   NbListModule,
-  NbToastrModule,
-  NbAlertModule,
-  NbSpinnerModule,
+  NbMenuModule,
+  NbPopoverModule,
+  NbProgressBarModule,
   NbRadioModule,
+  NbRouteTabsetModule,
+  NbSearchModule,
   NbSelectModule,
-  NbChatModule,
+  NbSidebarModule,
+  NbSpinnerModule,
+  NbStepperModule,
+  NbTabsetModule,
+  NbThemeModule,
+  NbToastrModule,
   NbTooltipModule,
-  NbCalendarKitModule,
+  NbUserModule,
+  NbWindowModule,
 } from '@nebular/theme';
 
-import { NbSecurityModule } from '@nebular/security';
+import {NbSecurityModule} from '@nebular/security';
 
 import {
   FooterComponent,
   HeaderComponent,
-  SearchInputComponent,
-  ThemeSettingsComponent,
-  SwitcherComponent,
   LayoutDirectionSwitcherComponent,
+  SearchInputComponent,
+  SwitcherComponent,
+  ThemeSettingsComponent,
   ThemeSwitcherComponent,
-  TinyMCEComponent,
   ThemeSwitcherListComponent,
-  ToggleSettingsButtonComponent,
+  TinyMCEComponent,
 } from './components';
-import {
-  CapitalizePipe,
-  PluralPipe,
-  RoundPipe,
-  TimingPipe,
-  NumberWithCommasPipe,
-  EvaIconsPipe,
-} from './pipes';
+import {CapitalizePipe, EvaIconsPipe, NumberWithCommasPipe, PluralPipe, RoundPipe, TimingPipe,} from './pipes';
 import {
   OneColumnLayoutComponent,
   SampleLayoutComponent,
   ThreeColumnsLayoutComponent,
   TwoColumnsLayoutComponent,
 } from './layouts';
-import { DEFAULT_THEME } from './styles/theme.default';
-import { COSMIC_THEME } from './styles/theme.cosmic';
-import { CORPORATE_THEME } from './styles/theme.corporate';
+import {DEFAULT_THEME} from './styles/theme.default';
+import {COSMIC_THEME} from './styles/theme.cosmic';
+import {CORPORATE_THEME} from './styles/theme.corporate';
 
 const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
 
@@ -122,7 +114,6 @@ const COMPONENTS = [
   SampleLayoutComponent,
   ThreeColumnsLayoutComponent,
   TwoColumnsLayoutComponent,
-  ToggleSettingsButtonComponent,
 ];
 
 const ENTRY_COMPONENTS = [

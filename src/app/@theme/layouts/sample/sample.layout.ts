@@ -1,5 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
-import { delay, withLatestFrom, takeWhile } from 'rxjs/operators';
+import {Component, OnDestroy} from '@angular/core';
+import {delay, takeWhile, withLatestFrom} from 'rxjs/operators';
 import {
   NbMediaBreakpoint,
   NbMediaBreakpointsService,
@@ -9,7 +9,7 @@ import {
   NbThemeService,
 } from '@nebular/theme';
 
-import { StateService } from '../../../@core/utils';
+import {StateService} from '../../../@core/utils';
 
 // TODO: move layouts into the framework
 @Component({
@@ -57,7 +57,6 @@ import { StateService } from '../../../@core/utils';
         <ngx-theme-settings></ngx-theme-settings>
       </nb-sidebar>
     </nb-layout>
-    <ngx-toggle-settings-button></ngx-toggle-settings-button>
   `,
 })
 export class SampleLayoutComponent implements OnDestroy {
