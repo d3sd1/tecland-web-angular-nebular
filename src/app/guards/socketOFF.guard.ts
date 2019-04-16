@@ -26,6 +26,9 @@ export class SocketOFFGuard implements CanActivate {
             this.router.navigate([redirUrl]);
           }
           localStorage.setItem('sockets_down_redir', '');
+        } else {
+          /* Init session handler for disconnecting everyone that goes session when other is connected on same user */
+          this.auth.endSessionHandler();
         }
         observer.next(!online);
       }, 1000);

@@ -6,7 +6,6 @@ import {NbToastStatus} from '@nebular/theme/components/toastr/model';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {JwtSession} from '../model/JwtSession';
 import {NavigationStart, Router} from '@angular/router';
-import {Channel} from '../websockets/Channel';
 import {Subscription} from 'rxjs';
 import {WebsocketRoute} from '../websockets/WebsocketRoute';
 import {AppCommonRoutes} from '../app-common-routes';
@@ -17,16 +16,14 @@ import {AppCommonRoutes} from '../app-common-routes';
 @Injectable()
 export class SessionService {
 
-  private userSessionChannel: Channel;
-  private userSessionSubscription: Subscription;
-  private userSessionPreferencesChannel: Channel;
-  private userSessionPreferencesSubscription: Subscription;
-  private userSessionTrackPagesSubscription: Subscription;
-  private loggedInUserId: number;
+  private loggedInUserId; // TYPE USER
+  private sessionActive: boolean;
+  private subs: Subscription[];
 
   constructor(private ws: WebsocketClient, private toastrService: NbToastrService, private router: Router) {
-    this.userSessionChannel = null;
     this.loggedInUserId = 0;
+    this.sessionActive = false;
+    this.subs = [];
   }
 
   public login(jwt: string) {
@@ -35,35 +32,37 @@ export class SessionService {
   }
 
   public initSessionHandler() {
-    this.loggedInUserId = this.decodeSessionJwt().data.jti;
-    this.initUserSessionChannel();
-    this.initUserPreferencesChannel();
-    this.trackVisitedPages();
+    if (!this.sessionActive) {
+      this.loggedInUserId = this.decodeSessionJwt().data.jti;
+      this.initUserSessionChannel();
+      this.initUserPreferencesChannel();
+      this.trackVisitedPages();
+      this.sessionActive = true;
+    }
   }
 
   public endSessionHandler() {
-    if (null !== this.userSessionChannel) {
-      this.userSessionChannel.disconnect();
-      this.userSessionSubscription.unsubscribe();
-      this.userSessionTrackPagesSubscription.unsubscribe();
-      this.userSessionChannel = null;
-      this.userSessionSubscription = null;
-      this.userSessionPreferencesChannel = null;
-      this.userSessionPreferencesSubscription = null;
+    if (this.sessionActive) {
+      this.subs.forEach((sub: Subscription) => {
+        sub.unsubscribe();
+      });
+      this.subs = [];
+      this.sessionActive = false;
     }
   }
 
   public sessionExpireRemainMs() {
+    console.log(this.decodeSessionJwt().expirationDate.getTime() - (new Date()).getTime());
     return this.decodeSessionJwt().expirationDate.getTime() - (new Date()).getTime();
   }
 
   public trackVisitedPages() {
-    this.userSessionTrackPagesSubscription = this.router.events.subscribe((event) => {
+    this.subs.push(this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
-        console.log("visited new page");
-        //TODO: guyardar contra el rest
+        // console.log("visited new page");
+        // TODO: guyardar contra el rest
       }
-    });
+    }));
   }
 
   public logout(): Promise<boolean> {
@@ -108,8 +107,8 @@ export class SessionService {
   }
 
   private initUserSessionChannel() {
-    this.userSessionChannel = this.ws.subscribe(WebsocketRoute.CHECK_SESSION, false);
-    this.userSessionSubscription = this.userSessionChannel.stream().subscribe((message: Message) => {
+    const userSess = this.ws.subscribe(WebsocketRoute.CHECK_SESSION, false);
+    this.subs.push(userSess.stream((message: Message) => {
       const logoutUserId = JSON.parse(message.body).data;
       if (parseInt(logoutUserId, 10) === parseInt(this.loggedInUserId.toString(), 10)) {
         this.logout().then(() => {
@@ -125,15 +124,16 @@ export class SessionService {
             });
         });
       }
-    });
+    }));
   }
 
   private initUserPreferencesChannel() {
-    this.userSessionChannel = this.ws.subscribe(WebsocketRoute.SESSION_DATA, true);
-    this.userSessionSubscription = this.userSessionChannel.stream().subscribe((message: Message) => {
+    const sessChannel = this.ws.subscribe(WebsocketRoute.SESSION_DATA, true);
+    this.subs.push(sessChannel.stream((message: Message) => {
       const logoutUserId = JSON.parse(message.body).data;
-    });
-    this.userSessionChannel.send({});
+    }));
+    /* send alive packet so we receive data */
+    sessChannel.send({});
   }
 
 }

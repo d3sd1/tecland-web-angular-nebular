@@ -43,7 +43,7 @@ export class NgxLoginComponent extends NbLoginComponent {
 
     this.loginChannel = this.ws.subscribe(WebsocketRoute.LOGIN, true);
 
-    this.loginChannel.stream().subscribe((message: Message) => {
+    this.loginChannel.stream((message: Message) => {
       const resp = JSON.parse(message.body);
       if (resp.statusCode === 200) {
         this.submitted = false;
@@ -55,7 +55,6 @@ export class NgxLoginComponent extends NbLoginComponent {
         this.submitted = false;
         this.showMessages.error = true;
         this.messages = ['Credenciales incorrectas'];
-
       }
     });
 
