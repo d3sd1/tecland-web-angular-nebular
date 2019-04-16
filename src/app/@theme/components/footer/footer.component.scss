@@ -2,6 +2,10 @@
 @import '~@nebular/theme/styles/global/breakpoints';
 @import '~bootstrap/scss/mixins/breakpoints';
 
+html {
+  scroll-behavior: smooth;
+}
+
 @include nb-install-component() {
   width: 100%;
   display: flex;
