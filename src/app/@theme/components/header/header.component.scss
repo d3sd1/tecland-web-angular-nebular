@@ -78,20 +78,10 @@
     }
   }
 
-  ngx-layout-direction-switcher {
-    margin: 0 1.5rem;
-  }
-
   ngx-theme-switcher {
     margin: nb-theme(layout-padding);
     margin-top: 0;
     margin-bottom: 0;
-  }
-
-  @include media-breakpoint-down(xl) {
-    ngx-layout-direction-switcher {
-      display: none;
-    }
   }
 
   .toggle-settings /deep/ a {
@@ -165,10 +155,6 @@
 
     .toggle-settings {
       padding: 0;
-    }
-
-    ngx-layout-direction-switcher {
-      display: none;
     }
 
     ngx-theme-switcher {

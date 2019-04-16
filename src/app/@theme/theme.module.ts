@@ -43,15 +43,13 @@ import {NbSecurityModule} from '@nebular/security';
 import {
   FooterComponent,
   HeaderComponent,
-  LayoutDirectionSwitcherComponent,
   SearchInputComponent,
   SwitcherComponent,
-  ThemeSettingsComponent,
   ThemeSwitcherComponent,
   ThemeSwitcherListComponent,
   TinyMCEComponent,
 } from './components';
-import {CapitalizePipe, EvaIconsPipe, NumberWithCommasPipe, PluralPipe, RoundPipe, TimingPipe,} from './pipes';
+import {CapitalizePipe, EvaIconsPipe, NumberWithCommasPipe, PluralPipe, RoundPipe, TimingPipe} from './pipes';
 import {
   OneColumnLayoutComponent,
   SampleLayoutComponent,
@@ -102,13 +100,11 @@ const NB_MODULES = [
 
 const COMPONENTS = [
   SwitcherComponent,
-  LayoutDirectionSwitcherComponent,
   ThemeSwitcherComponent,
   ThemeSwitcherListComponent,
   HeaderComponent,
   FooterComponent,
   SearchInputComponent,
-  ThemeSettingsComponent,
   TinyMCEComponent,
   OneColumnLayoutComponent,
   SampleLayoutComponent,
@@ -134,7 +130,7 @@ const NB_THEME_PROVIDERS = [
     {
       name: 'cosmic',
     },
-    [ DEFAULT_THEME, COSMIC_THEME, CORPORATE_THEME ],
+    [DEFAULT_THEME, COSMIC_THEME, CORPORATE_THEME],
   ).providers,
   ...NbSidebarModule.forRoot().providers,
   ...NbMenuModule.forRoot().providers,
