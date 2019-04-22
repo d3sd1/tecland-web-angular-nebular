@@ -62,6 +62,10 @@ export class WebsocketClient {
     this.conStateHandler.unsubscribe();
   }
 
+  public subscribe(channel: string, isPrivateChannel: boolean): Channel {
+    return new Channel(this.connection, channel, isPrivateChannel, this.toastrService);
+  }
+
   private getConnection() {
     if (this.connection === null) {
       const WEBSOCKET_URL = 'ws://localhost:' + environment.socketPort + '/opencon';
@@ -130,7 +134,7 @@ export class WebsocketClient {
             {
               position: NbGlobalPhysicalPosition.BOTTOM_RIGHT,
               status: NbToastStatus.DANGER,
-              duration: 10000,
+              duration: 5000,
               preventDuplicates: true,
               destroyByClick: false,
             });
@@ -142,10 +146,6 @@ export class WebsocketClient {
 
     return this.connection;
 
-  }
-
-  public subscribe(channel: string, isPrivateChannel: boolean): Channel {
-    return new Channel(this.connection, channel, isPrivateChannel);
   }
 
   public state(): BehaviorSubject<StompState> {

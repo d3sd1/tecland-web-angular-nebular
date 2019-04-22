@@ -1,6 +1,5 @@
 import {WebsocketClient} from '../websockets/websocket-client.service';
 import {Injectable} from '@angular/core';
-import {Message} from '@stomp/stompjs';
 import {NbGlobalPhysicalPosition, NbToastrService} from '@nebular/theme';
 import {NbToastStatus} from '@nebular/theme/components/toastr/model';
 import {NavigationStart, Router} from '@angular/router';
@@ -55,8 +54,8 @@ export class SessionService {
 
   private initUserSessionChannel() {
     const userSess = this.ws.subscribe(WebsocketRoute.CHECK_SESSION, false);
-    this.subs.push(userSess.stream((message: Message) => {
-      const logoutUserId = JSON.parse(message.body).data;
+    this.subs.push(userSess.stream((resp) => {
+      const logoutUserId = resp.data;
       if (parseInt(logoutUserId, 10) === parseInt(this.loggedInUserId.toString(), 10)) {
         this.logout().then(() => {
           this.toastrService.show(
@@ -102,8 +101,8 @@ export class SessionService {
 
   private initUserPreferencesChannel() {
     const sessChannel = this.ws.subscribe(WebsocketRoute.SESSION_DATA, true);
-    this.subs.push(sessChannel.stream((message: Message) => {
-      const logoutUserId = JSON.parse(message.body).data;
+    this.subs.push(sessChannel.stream((resp) => {
+      const logoutUserId = resp.data;
     }));
     /* send alive packet so we receive data */
     sessChannel.send({});

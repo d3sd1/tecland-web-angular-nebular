@@ -3,7 +3,6 @@ import {Router} from '@angular/router';
 import {WebsocketClient} from '../../websockets/websocket-client.service';
 import {NbAuthService, NbLoginComponent} from '@nebular/auth';
 import {Channel} from '../../websockets/Channel';
-import {Message} from '@stomp/stompjs';
 import {LocationService} from '../../services/location.service';
 import {SessionService} from '../../services/session.service';
 import {WebsocketRoute} from '../../websockets/WebsocketRoute';
@@ -43,19 +42,16 @@ export class NgxLoginComponent extends NbLoginComponent {
 
     this.loginChannel = this.ws.subscribe(WebsocketRoute.LOGIN, true);
 
-    this.loginChannel.stream((message: Message) => {
-      const resp = JSON.parse(message.body);
-      if (resp.statusCode === 200) {
-        this.submitted = false;
-        this.connected = true;
-        this.showMessages.success = true;
-        this.messages = ['¡Conexión satisfactoria!'];
-        this.auth.login(resp.data.jwt);
-      } else {
-        this.submitted = false;
-        this.showMessages.error = true;
-        this.messages = ['Credenciales incorrectas'];
-      }
+    this.loginChannel.stream((data) => {
+      this.submitted = false;
+      this.connected = true;
+      this.showMessages.success = true;
+      this.messages = ['¡Conexión satisfactoria!'];
+      this.auth.login(data.jwt);
+    }, (resp) => {
+      this.submitted = false;
+      this.showMessages.error = true;
+      this.messages = ['Credenciales incorrectas'];
     });
 
     this.location.getPosition().then(pos => {
