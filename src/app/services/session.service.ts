@@ -59,7 +59,7 @@ export class SessionService {
     this.subs.push(this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
         // console.log("visited new page");
-        // TODO: guyardar contra el rest
+        // TODO: guyardar contra el rest ->
       }
     }));
   }
