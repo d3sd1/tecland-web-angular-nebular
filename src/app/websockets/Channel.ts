@@ -44,6 +44,10 @@ export class Channel {
         if (null !== permissionErr) {
           genericErr(resp.data);
         }
+      } else if (resp.statusCode === 500) {
+        console.error(resp);
+      } else {
+        console.error('UNHANDLED EXCEPTION: ', resp);
       }
     });
     this.subscriptions.push(sub);

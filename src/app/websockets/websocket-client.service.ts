@@ -62,10 +62,6 @@ export class WebsocketClient {
     this.conStateHandler.unsubscribe();
   }
 
-  public subscribe(channel: string, isPrivateChannel: boolean): Channel {
-    return new Channel(this.connection, channel, isPrivateChannel, this.toastrService);
-  }
-
   private getConnection() {
     if (this.connection === null) {
       const WEBSOCKET_URL = 'ws://localhost:' + environment.socketPort + '/opencon';
@@ -146,6 +142,10 @@ export class WebsocketClient {
 
     return this.connection;
 
+  }
+
+  public subscribe(channel: string, isPrivateChannel: boolean): Channel {
+    return new Channel(this.connection, channel, isPrivateChannel, this.toastrService);
   }
 
   public state(): BehaviorSubject<StompState> {
