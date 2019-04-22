@@ -22,6 +22,7 @@ import {SocketOFFGuard} from './guards/socketOFF.guard';
 import {LoggedInGuard} from './guards/loggedIn.guard';
 import {LoggedOutGuard} from './guards/loggedOut.guard';
 import {NbToastrModule} from '@nebular/theme';
+import {JwtStorageService} from './services/jwt.storage.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,6 +40,7 @@ import {NbToastrModule} from '@nebular/theme';
   bootstrap: [AppComponent],
   providers: [
     WebsocketClient,
+    JwtStorageService,
     SessionService,
     LocationService,
     SocketONGuard,

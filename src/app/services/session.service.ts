@@ -3,12 +3,11 @@ import {Injectable} from '@angular/core';
 import {Message} from '@stomp/stompjs';
 import {NbGlobalPhysicalPosition, NbToastrService} from '@nebular/theme';
 import {NbToastStatus} from '@nebular/theme/components/toastr/model';
-import {JwtHelperService} from '@auth0/angular-jwt';
-import {JwtSession} from '../model/JwtSession';
 import {NavigationStart, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {WebsocketRoute} from '../websockets/WebsocketRoute';
 import {AppCommonRoutes} from '../app-common-routes';
+import {JwtStorageService} from './jwt.storage.service';
 
 /**
  * Abstraction layer for auth. Nice to have when things get more complicated.
@@ -20,20 +19,18 @@ export class SessionService {
   private sessionActive: boolean;
   private subs: Subscription[];
 
-  constructor(private ws: WebsocketClient, private toastrService: NbToastrService, private router: Router) {
+  constructor(private ws: WebsocketClient,
+              private toastrService: NbToastrService,
+              private router: Router,
+              private jwtMan: JwtStorageService) {
     this.loggedInUserId = 0;
     this.sessionActive = false;
     this.subs = [];
   }
 
-  public login(jwt: string) {
-    this.setSessionJwt(jwt);
-    this.router.navigate([AppCommonRoutes.dashDefaultInitPage]);
-  }
-
   public initSessionHandler() {
-    if (!this.sessionActive && this.decodeSessionJwt().data !== null) {
-      this.loggedInUserId = this.decodeSessionJwt().data.jti;
+    if (!this.sessionActive && this.jwtMan.decodeSessionJwt().data !== null) {
+      this.loggedInUserId = this.jwtMan.decodeSessionJwt().data.jti;
       this.initUserSessionChannel();
       this.initUserPreferencesChannel();
       this.trackVisitedPages();
@@ -52,58 +49,9 @@ export class SessionService {
   }
 
   public sessionExpireRemainMs() {
-    return this.decodeSessionJwt().expirationDate.getTime() - (new Date()).getTime();
+    return this.jwtMan.decodeSessionJwt().expirationDate.getTime() - (new Date()).getTime();
   }
 
-  public trackVisitedPages() {
-    this.subs.push(this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        // console.log("visited new page");
-        // TODO: guyardar contra el rest ->
-      }
-    }));
-  }
-
-  public logout(): Promise<boolean> {
-    const logoutJwt = this.ws.subscribe(WebsocketRoute.LOGOUT, true);
-
-    logoutJwt.send({
-      'jwt': this.getSessionJwt(),
-    });
-    this.endSessionHandler();
-    this.setSessionJwt('');
-    return this.router.navigate([AppCommonRoutes.login]);
-  }
-
-  public getSessionJwt(): string {
-    return localStorage.getItem('userSessionTL');
-  }
-
-  public setSessionJwt(jwt: string) {
-    localStorage.setItem('userSessionTL', jwt);
-  }
-
-  public decodeSessionJwt(): JwtSession {
-    const jwtSession = new JwtSession();
-    try {
-      const helper = new JwtHelperService();
-      const jwt = this.getSessionJwt();
-
-      jwtSession.data = helper.decodeToken(jwt);
-      jwtSession.expired = helper.isTokenExpired(jwt);
-      jwtSession.expirationDate = helper.getTokenExpirationDate(jwt);
-    } catch (e) {
-      jwtSession.data = null;
-      jwtSession.expired = true;
-      jwtSession.expirationDate = new Date();
-    }
-
-    return jwtSession;
-  }
-
-  public isSessionExpired(): boolean {
-    return this.decodeSessionJwt().expired;
-  }
 
   private initUserSessionChannel() {
     const userSess = this.ws.subscribe(WebsocketRoute.CHECK_SESSION, false);
@@ -124,6 +72,32 @@ export class SessionService {
         });
       }
     }));
+  }
+
+
+  public login(jwt: string) {
+    this.jwtMan.setSessionJwt(jwt);
+    this.router.navigate([AppCommonRoutes.dashDefaultInitPage]);
+  }
+
+  public trackVisitedPages() {
+    this.subs.push(this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        // console.log("visited new page");
+        // TODO: guyardar contra el rest ->
+      }
+    }));
+  }
+
+  public logout(): Promise<boolean> {
+    const logoutJwt = this.ws.subscribe(WebsocketRoute.LOGOUT, true);
+
+    logoutJwt.send({
+      'jwt': this.jwtMan.getSessionJwt(),
+    });
+    this.endSessionHandler();
+    this.jwtMan.clearSessionJwt();
+    return this.router.navigate([AppCommonRoutes.login]);
   }
 
   private initUserPreferencesChannel() {
