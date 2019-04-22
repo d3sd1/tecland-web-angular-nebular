@@ -28,6 +28,8 @@ export class LoggedInGuard implements CanActivate {
             preventDuplicates: true,
             destroyByClick: false,
           });
+        /* Clear JWT to prevent "Connected from another device" when logging back */
+        this.auth.setSessionJwt('');
       });
     } else {
       /* Init session handler for disconnecting everyone that goes session when other is connected on same user */

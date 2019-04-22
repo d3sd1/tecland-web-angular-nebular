@@ -32,7 +32,7 @@ export class SessionService {
   }
 
   public initSessionHandler() {
-    if (!this.sessionActive) {
+    if (!this.sessionActive && this.decodeSessionJwt().data !== null) {
       this.loggedInUserId = this.decodeSessionJwt().data.jti;
       this.initUserSessionChannel();
       this.initUserPreferencesChannel();
@@ -52,7 +52,6 @@ export class SessionService {
   }
 
   public sessionExpireRemainMs() {
-    console.log(this.decodeSessionJwt().expirationDate.getTime() - (new Date()).getTime());
     return this.decodeSessionJwt().expirationDate.getTime() - (new Date()).getTime();
   }
 
