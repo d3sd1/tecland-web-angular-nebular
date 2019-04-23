@@ -46,7 +46,7 @@ export class Channel {
         }
       } else if (resp.statusCode === 500) {
         console.error(resp);
-      } else {
+      } else if (resp.statusCode >= 300) { // IGNORE 100 and 200 codes
         console.error('UNHANDLED EXCEPTION: ', resp);
       }
     });
