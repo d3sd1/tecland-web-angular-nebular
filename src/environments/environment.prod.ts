@@ -6,4 +6,5 @@
 export const environment = {
   production: true,
   socketPort: 9080,
+  host: 'testdash.tecland.net',
 };

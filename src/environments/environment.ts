@@ -11,4 +11,5 @@
 export const environment = {
   production: false,
   socketPort: 9080,
+  host: 'localhost',
 };

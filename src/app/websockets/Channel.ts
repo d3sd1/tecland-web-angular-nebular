@@ -1,11 +1,9 @@
 import {Observable, Subscription} from 'rxjs';
 import {StompService} from '@stomp/ng2-stompjs';
 import {Message} from '@stomp/stompjs';
-import {Injectable} from '@angular/core';
 import {NbGlobalPhysicalPosition, NbToastrService} from '@nebular/theme';
 import {NbToastStatus} from '@nebular/theme/components/toastr/model';
 
-@Injectable()
 export class Channel {
   private messages: Observable<Message>;
   private subscriptions: Subscription[];

@@ -16,10 +16,11 @@
   ],
   "scripts": {
     "ng": "ng",
+    "postinstall": "node path/patch-cli",
     "conventional-changelog": "conventional-changelog",
     "start": "ng serve --port=4201 --aot",
     "build": "ng build",
-    "build:prod": "npm run build --prod --aot",
+    "build:prod": "npm run build --prod --aot --source-map=false --watch=true --build-optimizer=false",
     "test": "ng test",
     "test:coverage": "rimraf coverage && npm run test -- --code-coverage",
     "lint": "ng lint",
