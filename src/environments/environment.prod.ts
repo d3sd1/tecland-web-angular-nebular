@@ -5,6 +5,7 @@
  */
 export const environment = {
   production: true,
+  useSsl: true,
   socketPort: 443,
   host: 'testapi.tecland.net',
   name: 'prod',

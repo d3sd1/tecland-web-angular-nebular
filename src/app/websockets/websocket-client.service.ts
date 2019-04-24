@@ -64,7 +64,8 @@ export class WebsocketClient {
 
   private getConnection() {
     if (this.connection === null) {
-      const WEBSOCKET_URL = 'ws://' + environment.host + ':' + environment.socketPort + '/opencon';
+      const WEBSOCKET_URL = (environment.useSsl ? 'wss' : 'ws') +
+        '://' + environment.host + ':' + environment.socketPort + '/opencon';
       const stompConfig: StompConfig = {
         url: WEBSOCKET_URL,
         headers: {},
