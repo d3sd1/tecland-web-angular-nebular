@@ -7,5 +7,5 @@ export const environment = {
   production: true,
   socketPort: 443,
   host: 'testapi.tecland.net',
-  name: 'prod',
+  name: 'test',
 };
