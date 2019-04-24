@@ -10,5 +10,5 @@
 
 export const environment = {
   production: false,
-  socketPort: 9080
+  socketPort: 9080,
 };
